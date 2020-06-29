@@ -1,8 +1,9 @@
 
-const items_container = document.getElementById('items')
+const itemsContainer = document.getElementById('items')
 
-const footer = document.getElementsByTagName('footer')
-
+const itemList = document.getElementById('item-list')
+console.log(itemList)
+itemList.innerHTML = '<li> Hello World </li>'
 
 
 
@@ -43,12 +44,12 @@ data.forEach(item => {
   newDiv.appendChild(button)
 
   // put new div inside items container
-  items_container.appendChild(newDiv)
+  itemsContainer.appendChild(newDiv)
 })
 
 // get all the buttons
 const all_items_button = Array.from(document.querySelectorAll("button"))
-console.log(all_items_button)
+// console.log(all_items_button)
 // when each button is clicked, add it to cart
 all_items_button.forEach(elt => elt.addEventListener('click', () => {
   console.log(elt)
@@ -86,9 +87,12 @@ function showItems() {
   const qty = getQty()
   console.log(`You have ${qty} items in your cart`)
 
+  let itemStr = ''
   for (let i = 0; i < cart.length; i += 1) {
-      console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
+      itemStr += `<li> ${cart[i].name} $${cart[i].price} x ${cart[i].qty}</li>`
+      // console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
   }
+  itemList.innerHTML = itemStr
 
   // to calculate the total amount needed in 
   const total = getTotal()
