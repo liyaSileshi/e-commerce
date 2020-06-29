@@ -1,20 +1,13 @@
-const all_items_button = Array.from(document.querySelectorAll("button"))
+
 const items_container = document.getElementById('items')
-console.log(all_items_button)
+
 const footer = document.getElementsByTagName('footer')
 
-all_items_button.forEach(elt => elt.addEventListener('click', () => {
-  console.log(elt)
-  console.log(elt.getAttribute('id'))
-  let para = document.createElement("P");
-  para.innerText = `hello`;
-}))
+
 
 
 //import data from data.json
 import data from './data.js'
-
-let main_div = document.createElement('div');
 // for each item in data, do something
 data.forEach(item => {
   let newDiv = document.createElement('div');
@@ -43,6 +36,9 @@ data.forEach(item => {
 
   let button = document.createElement('button')
   button.id = item.name
+  // creates a custom attribute called data-price. That will hold price for each element
+  // in the button
+  button.dataset.price = item.price
   button.innerHTML = "Add to Cart"
   newDiv.appendChild(button)
 
@@ -50,15 +46,98 @@ data.forEach(item => {
   items_container.appendChild(newDiv)
 })
 
-console.log(items_container)
+// get all the buttons
+const all_items_button = Array.from(document.querySelectorAll("button"))
+console.log(all_items_button)
+// when each button is clicked, add it to cart
+all_items_button.forEach(elt => elt.addEventListener('click', () => {
+  console.log(elt)
+  console.log(elt.getAttribute('id'))
+  addItem(elt.getAttribute('id'), elt.getAttribute('data-price'))
+  showItems()
+}))
 
 
 
 
+// Shopping cart tutorial
+const cart = []
 
+// adds item to the cart as objects
+// ----------------------------------------------------------------
+function addItem(name, price) {
+  for (let i = 0; i < cart.length; i += 1) {
+    // if the same button is clicked twice (same mood clicked twice)
+    if (cart[i].name === name) {
+      // add quantity
+      cart[i].qty += 1
+      return  // stop here
+    }
+  } 
+  // const item = {name: name, price: price, qty: 1} or 
+  const item = {name, price, qty: 1}
+  cart.push(item)
+}
+
+
+// shows item to the cart
+//-----------------------------------------------------------------
+function showItems() {
+  const qty = getQty()
+  console.log(`You have ${qty} items in your cart`)
+
+  for (let i = 0; i < cart.length; i += 1) {
+      console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
+  }
+
+  // to calculate the total amount needed in 
+  const total = getTotal()
+  console.log(`Total in cart: ${total}`)
+}
+
+// get quantity 
+//---------------------------------------------------------------------
+function getQty() {
+  // show how many items in the cart (in quantity not type)
+  let qty = 0
+  for (let i=0; i< cart.length; i += 1) {
+    qty += cart[i].qty
+  }
+  return qty
+}
+
+// remove items
+//-----------------------------------------------------------------------
+function removeItem(name, qty=0) {
+  for (let i = 0; i < cart.length; i+=1) {
+    if (cart[i].name === name) {
+      if (qty > 0) {
+        cart[i].qty -= qty
+      }
+      if (cart[i].qty < 1 || qty === 0) {
+        cart.splice(i, 1)
+      }
+      return 
+    }
+  }
+}
+
+// get total 
+//-----------------------------------------------------------------------
+function getTotal() {
+  let total = 0
+  for (let i = 0; i < cart.length; i += 1) {
+    console.log(cart[i].price)
+    total += cart[i].price * cart[i].qty
+  }
+  return total.toFixed(2)
+}
+
+
+
+
+showItems()
 
 // footer.
 // when a add to cart is clicked, add it to the footer
 
-let para = document.createElement("P");
-para.innerText = `hello`;
