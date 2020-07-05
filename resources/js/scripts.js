@@ -2,7 +2,8 @@
 const itemsContainer = document.getElementById('items')
 
 const itemList = document.getElementById('item-list')
-console.log(itemList)
+const cartQty = document.getElementById('cart-qty')
+const cartTotal = document.getElementById('cart-total')
 itemList.innerHTML = '<li> Hello World </li>'
 
 
@@ -64,6 +65,18 @@ all_items_button.forEach(elt => elt.addEventListener('click', () => {
 // Shopping cart tutorial
 const cart = []
 
+
+// ----------------------------------------------------------------
+//handle clicks on list
+itemList.onclick = function(e) {
+  console.log('clicked')
+  if (e.target && e.target.classList.contains('remove')) {
+    const name = e.target.dataset.name
+    removeItem(name)
+  }
+}
+
+
 // adds item to the cart as objects
 // ----------------------------------------------------------------
 function addItem(name, price) {
@@ -85,18 +98,23 @@ function addItem(name, price) {
 //-----------------------------------------------------------------
 function showItems() {
   const qty = getQty()
-  console.log(`You have ${qty} items in your cart`)
+  cartQty.innerHTML = `You have ${qty} items in your cart`
+  // console.log(`You have ${qty} items in your cart`)
 
   let itemStr = ''
   for (let i = 0; i < cart.length; i += 1) {
-      itemStr += `<li> ${cart[i].name} $${cart[i].price} x ${cart[i].qty}</li>`
-      // console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
+    const {name, price, qty} = cart[i]
+    itemStr += `<li> 
+      ${name} $${price} x ${qty} = $${(qty * price).toFixed(2)} 
+      <button class='remove' data-name=${name}>Remove</button>
+      </li>`
+    // console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
   }
   itemList.innerHTML = itemStr
 
   // to calculate the total amount needed in 
   const total = getTotal()
-  console.log(`Total in cart: ${total}`)
+  cartTotal.innerHTML = `Total in cart: $${total}`
 }
 
 // get quantity 
@@ -121,6 +139,7 @@ function removeItem(name, qty=0) {
       if (cart[i].qty < 1 || qty === 0) {
         cart.splice(i, 1)
       }
+      showItems() //refreshes the item list
       return 
     }
   }
@@ -140,7 +159,7 @@ function getTotal() {
 
 
 
-showItems()
+// showItems()
 
 // footer.
 // when a add to cart is clicked, add it to the footer
