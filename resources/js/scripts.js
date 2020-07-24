@@ -1,3 +1,4 @@
+// work on position of input of shopping cart
 
 const itemsContainer = document.getElementById('items')
 
@@ -65,6 +66,15 @@ all_items_button.forEach(elt => elt.addEventListener('click', () => {
 // Shopping cart tutorial
 const cart = []
 
+// --------------------------------------------------------------------
+// Handle change events on update input
+itemList.onchange = function(e) {
+  if (e.target && e.target.classList.contains('update')) {
+    const name = e.target.dataset.name
+    const qty = parseInt(e.target.value)
+    updateCart(name, qty)
+  }
+}
 
 // ----------------------------------------------------------------
 //handle clicks on list
@@ -73,6 +83,12 @@ itemList.onclick = function(e) {
   if (e.target && e.target.classList.contains('remove')) {
     const name = e.target.dataset.name
     removeItem(name)
+  } else if (e.target && e.target.classList.contains('add-one')) {
+    const name = e.target.dataset.name
+    addItem(name)
+  } else if (e.target && e.target.classList.contains('remove-one')) {
+    const name = e.target.dataset.name
+    removeItem(name, 1)
   }
 }
 
@@ -85,6 +101,7 @@ function addItem(name, price) {
     if (cart[i].name === name) {
       // add quantity
       cart[i].qty += 1
+      showItems()
       return  // stop here
     }
   } 
@@ -107,6 +124,9 @@ function showItems() {
     itemStr += `<li> 
       ${name} $${price} x ${qty} = $${(qty * price).toFixed(2)} 
       <button class='remove' data-name=${name}>Remove</button>
+      <button class='add-one' data-name=${name}> + </button>
+      <button class='remove-one' data-name=${name}> - </button>
+      <input class='update' type='number' data-name=${name}>
       </li>`
     // console.log(`${cart[i].name} ${cart[i].price} x ${cart[i].qty}`)
   }
@@ -144,7 +164,20 @@ function removeItem(name, qty=0) {
     }
   }
 }
-
+//-----------------------------------------------------
+function updateCart(name, qty) {
+  for (let i=0; i< cart.length; i+=1){
+    if(cart[i].name === name) {
+      if (qty < 1) {
+        removeItem(name) 
+        return
+      }
+      cart[i].qty = qty
+      showItems()
+      return
+    }
+  }
+}
 // get total 
 //-----------------------------------------------------------------------
 function getTotal() {
