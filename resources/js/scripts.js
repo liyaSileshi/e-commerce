@@ -49,6 +49,7 @@ data.forEach(item => {
   itemsContainer.appendChild(newDiv)
 })
 
+
 // get all the buttons
 const all_items_button = Array.from(document.querySelectorAll("button"))
 // console.log(all_items_button)
